@@ -1,0 +1,182 @@
+{
+  "claude_desktop_config": {
+    "description": "Add this to your Claude Desktop configuration file",
+    "location": {
+      "macOS": "~/Library/Application Support/Claude/claude_desktop_config.json",
+      "Windows": "%APPDATA%\\Claude\\claude_desktop_config.json"
+    },
+    "config": {
+      "mcpServers": {
+        "ai-governance": {
+          "command": "python",
+          "args": ["-m", "ai_governance_mcp.server"],
+          "env": {}
+        }
+      }
+    }
+  },
+  
+  "custom_patterns_example": {
+    "description": "Example custom PII patterns for your organization",
+    "location": "~/.ai_governance_mcp/custom_patterns.json",
+    "patterns": {
+      "employee_id": {
+        "pattern": "EMP\\d{6}",
+        "name": "Employee ID",
+        "severity": "high",
+        "description": "Internal employee identifier"
+      },
+      "project_code": {
+        "pattern": "PROJ-[A-Z]{3}-\\d{4}",
+        "name": "Project Code",
+        "severity": "medium",
+        "description": "Internal project codes"
+      },
+      "customer_id": {
+        "pattern": "CUST\\d{8}",
+        "name": "Customer ID",
+        "severity": "high",
+        "description": "Customer identifier"
+      },
+      "internal_url": {
+        "pattern": "https?://[\\w.-]+\\.internal\\.company\\.com[\\w/.?=#]*",
+        "name": "Internal URL",
+        "severity": "medium",
+        "description": "Internal company URLs"
+      },
+      "api_endpoint": {
+        "pattern": "api\\.company\\.com/v\\d+/[\\w/]+",
+        "name": "API Endpoint",
+        "severity": "high",
+        "description": "Company API endpoints"
+      }
+    }
+  },
+  
+  "custom_policies_example": {
+    "description": "Example custom policies for your organization",
+    "location": "~/.ai_governance_mcp/custom_policies.json",
+    "policies": {
+      "company_confidential": {
+        "category": "confidential",
+        "keywords": [
+          "project phoenix",
+          "operation blue sky",
+          "merger plans",
+          "acquisition target",
+          "layoff plans",
+          "unreleased product"
+        ],
+        "action": "block",
+        "message": "Company confidential information detected. This content cannot be shared with external AI services.",
+        "severity": "critical"
+      },
+      "competitive_intelligence": {
+        "category": "business",
+        "keywords": [
+          "competitor pricing",
+          "competitor strategy",
+          "market share data",
+          "competitive analysis"
+        ],
+        "action": "warn",
+        "message": "Competitive intelligence detected. Please ensure this is appropriate to share.",
+        "severity": "medium"
+      },
+      "personal_opinions": {
+        "category": "pr",
+        "keywords": [
+          "my opinion on",
+          "I personally think",
+          "speaking personally",
+          "off the record"
+        ],
+        "action": "warn",
+        "message": "Personal opinion detected. Remember this may be attributed to the company.",
+        "severity": "low"
+      },
+      "financial_data": {
+        "category": "financial",
+        "keywords": [
+          "revenue figures",
+          "profit margins",
+          "financial forecast",
+          "earnings report",
+          "budget allocation"
+        ],
+        "regex_patterns": [
+          "\\$[0-9,]+(?:million|billion|M|B)",
+          "Q[1-4] \\d{4} (?:earnings|revenue|profit)"
+        ],
+        "action": "block",
+        "message": "Financial data detected. This information requires approval before sharing.",
+        "severity": "high"
+      }
+    }
+  },
+  
+  "server_config_example": {
+    "description": "Example server configuration options",
+    "location": "Can be passed when initializing the server",
+    "config": {
+      "pii_detection_enabled": true,
+      "policy_enforcement_enabled": true,
+      "audit_logging_enabled": true,
+      "auto_redact": true,
+      "extended_patterns": false,
+      "extended_policies": false,
+      "redaction_style": "[REDACTED]",
+      "max_prompt_length": 10000,
+      "rate_limit": {
+        "enabled": true,
+        "max_per_minute": 60,
+        "max_per_hour": 1000
+      },
+      "audit_retention_days": 90,
+      "export_formats": ["json", "csv"],
+      "notification_webhooks": [
+        {
+          "url": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL",
+          "events": ["policy_block", "high_severity_pii"],
+          "enabled": false
+        }
+      ]
+    }
+  },
+  
+  "test_prompts": {
+    "description": "Example prompts to test the system",
+    "prompts": [
+      {
+        "name": "Basic PII",
+        "text": "Contact John at john@example.com or 555-123-4567",
+        "expected": "Email and phone redacted"
+      },
+      {
+        "name": "Financial PII",
+        "text": "Payment card: 4532-1488-0343-6467, SSN: 123-45-6789",
+        "expected": "Credit card and SSN redacted"
+      },
+      {
+        "name": "API Credentials",
+        "text": "Use API key: sk_test_1234567890abcdef for authentication",
+        "expected": "API key redacted"
+      },
+      {
+        "name": "Medical Policy",
+        "text": "What medication should I prescribe for this patient?",
+        "expected": "Blocked - medical advice"
+      },
+      {
+        "name": "Legal Policy",
+        "text": "Should I sue my employer for wrongful termination?",
+        "expected": "Blocked - legal advice"
+      },
+      {
+        "name": "Clean Prompt",
+        "text": "Explain the difference between machine learning and AI",
+        "expected": "No issues - safe to send"
+      }
+    ]
+  }
+}

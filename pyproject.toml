@@ -1,0 +1,113 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-governance-mcp"
+version = "1.0.0"
+description = "AI Governance MCP Server - Enterprise-grade security and compliance for LLMs"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "AI Governance Team", email = "contact@aigovernance.dev" }
+]
+keywords = [
+    "mcp",
+    "ai",
+    "llm",
+    "security",
+    "compliance",
+    "pii",
+    "governance",
+    "claude",
+    "anthropic"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=0.9.0",
+    "aiofiles>=23.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/ai-governance-mcp"
+Documentation = "https://github.com/yourusername/ai-governance-mcp/blob/main/README.md"
+Repository = "https://github.com/yourusername/ai-governance-mcp"
+Issues = "https://github.com/yourusername/ai-governance-mcp/issues"
+
+[project.scripts]
+ai-governance-mcp = "ai_governance_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ai_governance_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.mcp]
+name = "ai-governance"
+version = "1.0.0"
+description = "Stop AI data leaks before they happen. PII detection, policy enforcement, and audit trails for any LLM."
+author = "AI Governance Team"
+homepage = "https://aigovernance.dev"
+license = "MIT"
+
+[tool.mcp.server]
+command = "python"
+args = ["-m", "ai_governance_mcp.server"]
+env = {}
+
+[tool.mcp.capabilities]
+tools = [
+    "scan_prompt",
+    "check_compliance",
+    "redact_pii",
+    "get_statistics",
+    "export_audit_logs",
+    "verify_integrity",
+    "configure"
+]
+resources = [
+    "governance://audit-logs",
+    "governance://statistics",
+    "governance://configuration",
+    "governance://patterns",
+    "governance://policies"
+]
